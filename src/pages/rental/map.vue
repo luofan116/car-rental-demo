@@ -24,7 +24,7 @@ async function load(){
 }
 function onMarkerTap(event){
  const shop=shops.value.find(s=>Number(s.id)===Number(event.detail.markerId))
- if(shop)uni.showModal({title:shop.name,content:shop.address+'\\n'+(shop.type==='rent'?'可租车辆：'+(shop.vehicles??0):'可用电池：'+(shop.batteries??0)),showCancel:false})
+ if(shop)uni.showModal({title:shop.name,content:shop.address+'\n'+(shop.type==='rent'?'可租车辆：'+(shop.vehicles??0):'可用电池：'+(shop.batteries??0)),showCancel:false})
 }
 function locate(){uni.getLocation({type:'gcj02',success:r=>{latitude.value=r.latitude;longitude.value=r.longitude},fail:()=>uni.showToast({title:t('rental.locationFail'),icon:'none'})})}
 function change(v){mode.value=v;load()}
@@ -38,7 +38,7 @@ function openRentalActions(){
     },
   })
 }
-onMounted(()=>{load();locate()})
+onMounted(()=>{load();if(import.meta.env.VITE_RENTAL_API_BASE)locate()})
 </script>
 <template>
 <view class="map-page">

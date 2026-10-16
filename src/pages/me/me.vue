@@ -1,79 +1,10 @@
-<script lang="ts" setup>
-import { storeToRefs } from 'pinia'
-import { LOGIN_PAGE } from '@/router/config'
-import { useUserStore } from '@/store'
-import { useTokenStore } from '@/store/token'
-
-definePage({
-  style: {
-    navigationBarTitleText: '我的',
-  },
-})
-
-const userStore = useUserStore()
-const tokenStore = useTokenStore()
-// 使用storeToRefs解构userInfo
-const { userInfo } = storeToRefs(userStore)
-
-// 微信小程序下登录
-async function handleLogin() {
-  // #ifdef MP-WEIXIN
-  // 微信登录
-  await tokenStore.wxLogin()
-
-  // #endif
-  // #ifndef MP-WEIXIN
-  uni.navigateTo({
-    url: `${LOGIN_PAGE}`,
-  })
-  // #endif
-}
-
-function handleLogout() {
-  uni.showModal({
-    title: '提示',
-    content: '确定要退出登录吗？',
-    success: (res) => {
-      if (res.confirm) {
-        // 清空用户信息
-        useTokenStore().logout()
-        // 执行退出登录逻辑
-        uni.showToast({
-          title: '退出登录成功',
-          icon: 'success',
-        })
-        // #ifdef MP-WEIXIN
-        // 微信小程序，去首页
-        // uni.reLaunch({ url: '/pages/index/index' })
-        // #endif
-        // #ifndef MP-WEIXIN
-        // 非微信小程序，去登录页
-        // uni.navigateTo({ url: LOGIN_PAGE })
-        // #endif
-      }
-    },
-  })
-}
+<script setup>
+import { ref,onShow } from 'vue'
+import { t } from '@/locale'
+definePage({style:{navigationBarTitleText:'我的'}})
+const user=ref(null)
+onShow(()=>user.value=uni.getStorageSync('rental_user')||null)
+const menu=[['orders','▤'],['mall','▦'],['reserve','▣'],['settings','⚙']]
+function go(p){uni.navigateTo({url:'/pages/rental/'+p})}
 </script>
-
-<template>
-  <view class="profile-container">
-    <view class="mt-3 break-all px-3 text-center text-green-500">
-      {{ userInfo.username ? '已登录' : '未登录' }}
-    </view>
-    <view class="mt-3 break-all px-3">
-      {{ JSON.stringify(userInfo, null, 2) }}
-    </view>
-
-    <view class="mt-[60vh] px-3">
-      <view class="m-auto w-160px text-center">
-        <button v-if="tokenStore.hasLogin" type="warn" class="w-full" @click="handleLogout">
-          退出登录
-        </button>
-        <button v-else type="primary" class="w-full" @click="handleLogin">
-          登录
-        </button>
-      </view>
-    </view>
-  </view>
-</template>
+<template><view class="min-h-screen bg-gray-50"><view class="bg-emerald-500 text-white p-8 pt-16 rounded-b-3xl"><view class="text-2xl font-bold" @click="go('login')">{{user?.nickname||user?.name||t('rental.loginText')}} ›</view><view class="mt-9 flex justify-around text-center"><view>¥ 0.00<view class="text-sm mt-2">{{t('rental.balance')}}</view></view><view>¥ 0.00<view class="text-sm mt-2">{{t('rental.deposit')}}</view></view><view>0<view class="text-sm mt-2">{{t('rental.coupons')}}</view></view></view></view><view class="bg-white rounded-2xl m-5 p-5"><view v-for="m in menu" :key="m[0]" class="py-5 border-b border-gray-100" @click="go(m[0])">{{m[1]}}　{{t('rental.'+m[0])}} <text class="float-right">›</text></view></view></view></template>

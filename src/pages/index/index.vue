@@ -25,9 +25,9 @@ async function load(){
 }
 function onMarkerTap(event){
  const shop=shops.value.find(s=>Number(s.id)===Number(event.detail.markerId))
- if(shop)uni.showModal({title:shop.name,content:shop.address+'\\n'+(shop.type==='rent'?'可租车辆：'+(shop.vehicles??0):'可用电池：'+(shop.batteries??0)),showCancel:false})
+ if(shop)uni.showModal({title:shop.name,content:shop.address+'\n'+(shop.type==='rent'?'可租车辆：'+(shop.vehicles??0):'可用电池：'+(shop.batteries??0)),showCancel:false})
 }
-onMounted(()=>{locate();load()})
+onMounted(()=>{load();if(import.meta.env.VITE_RENTAL_API_BASE)locate()})
 </script>
 <template>
  <view class="rental">

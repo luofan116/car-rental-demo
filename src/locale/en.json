@@ -46,5 +46,8 @@
   "rental.policyPending": "Official reviewed content is not configured",
   "rental.loggedOut": "Signed out",
   "rental.deleteAccountHint": "Account deletion requires the backend endpoint",
-  "rental.locationFail": "Location unavailable"
+  "rental.locationFail": "Location unavailable",
+  "tabbar.map": "Map",
+  "tabbar.rent": "Rent now",
+  "tabbar.mall": "Shop"
 }

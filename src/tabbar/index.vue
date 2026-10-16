@@ -15,13 +15,41 @@ defineOptions({
 /**
  * 中间的鼓包tabbarItem的点击事件
  */
+function showRentMenu() {
+  uni.showActionSheet({
+    itemList: ['扫码租车', '输入编号租车', '预约租车'],
+    success({ tapIndex }) {
+      if (tapIndex === 0) {
+        uni.scanCode({
+          onlyFromCamera: true,
+          success(result) {
+            uni.navigateTo({ url: '/pages/rental/rent?code=' + encodeURIComponent(result.result || '') })
+          },
+          fail(error) {
+            if (!String(error?.errMsg || '').includes('cancel'))
+              uni.showToast({ title: '扫码失败，请检查相机权限', icon: 'none' })
+          },
+        })
+      }
+      else if (tapIndex === 1) uni.navigateTo({ url: '/pages/rental/rent' })
+      else if (tapIndex === 2) uni.navigateTo({ url: '/pages/rental/reserve' })
+    },
+  })
+}
 function handleClickBulge() {
-  uni.switchTab({ url: '/pages/rental/rent' })
+  // 不切换到租车独立 Tab；先确保地图在弹层后方。
+  const current = getCurrentPages()
+  const route = current[current.length - 1]?.route
+  if (route === 'pages/rental/map') showRentMenu()
+  else uni.switchTab({
+    url: '/pages/rental/map',
+    success: () => setTimeout(showRentMenu, 180),
+  })
 }
 
 function handleClick(index: number) {
   // 点击原来的不做操作
-  if (index === tabbarStore.curIdx) {
+  if (index === tabbarStore.curIdx && !tabbarList.value[index]?.isBulge) {
     return
   }
   const list = tabbarList.value
@@ -95,9 +123,7 @@ onShow(() => {
         >
           <view v-if="item.isBulge" class="relative">
             <!-- 中间一个鼓包tabbarItem的处理 -->
-            <view class="bulge">
-              <TabbarItem :item="item" :index="index" class="text-center" is-bulge />
-            </view>
+            <view class="bulge"><text class="bulge-text">立即\n租赁</text></view>
           </view>
           <TabbarItem v-else :item="item" :index="index" class="relative px-3 text-center" />
         </view>
@@ -121,21 +147,27 @@ onShow(() => {
 // 中间鼓包的样式
 .bulge {
   position: absolute;
-  top: -20px;
   left: 50%;
-  transform-origin: top center;
-  transform: translateX(-50%) scale(0.5) translateY(-33%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 250rpx;
-  height: 250rpx;
+  bottom: -26px;
+  transform: translateX(-50%);
+  width: 126rpx;
+  height: 126rpx;
   border-radius: 50%;
-  background-color: #fff;
-  box-shadow: inset 0 0 0 1px #fefefe;
-
-  &:active {
-    // opacity: 0.8;
-  }
+  background: #416cda;
+  color: #fff;
+  box-shadow: 0 5rpx 18rpx rgba(52,102,218,.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1002;
 }
+.bulge-text {
+  display: block;
+  white-space: pre-line;
+  text-align: center;
+  font-size: 29rpx;
+  font-weight: 600;
+  line-height: 36rpx;
+}
+
 </style>

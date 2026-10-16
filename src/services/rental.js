@@ -18,7 +18,7 @@ export async function platformLogin(){
   // #endif
   // #ifdef MP-ALIPAY
   platform='alipay'
-  const r=await new Promise((resolve,reject)=>my.getAuthCode({scopes:'auth_base',success:resolve,fail:reject}))
+  const r=await new Promise((resolve,reject)=>my.getAuthCode({scopes:['auth_base'],success:resolve,fail:reject}))
   code=r.authCode
   // #endif
   if(!platform||!code) throw new Error('无法获得平台授权码')

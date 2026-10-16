@@ -4,7 +4,7 @@ import { api } from '@/services/rental'
 import { getDemoShops, mapShopMarkers } from '@/mock/shops'
 import { t } from '@/locale'
 import { useMiniNav } from '@/composables/miniNav'
-definePage({ style: { navigationStyle: 'custom' } })
+definePage({ style: { navigationStyle: 'custom', navigationBarTitleText: '', transparentTitle: 'always', titlePenetrate: 'YES', titleBarColor: '#ffffff' } })
 const latitude=ref(22.5431),longitude=ref(114.0579),markers=ref([])
 const mode=ref('rent')
 const { navBottom } = useMiniNav()

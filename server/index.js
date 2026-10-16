@@ -14,6 +14,7 @@ const shops=[
 {id:106,name:'优骑·福田口岸换电站（模拟）',address:'深圳福田口岸周边',latitude:22.5168,longitude:114.065,type:'swap',batteries:8}]
 const orders=[],reservations=[]
 function token(subject='demo-001'){const p=Buffer.from(JSON.stringify({sub:subject,exp:Date.now()+86400000})).toString('base64url');return p+'.'+crypto.createHmac('sha256',secret).update(p).digest('base64url')}
+function subject(req){try{return subject(req)}catch{return null}}
 function authorized(req){try{const [p,s]=(req.headers.authorization||'').replace(/^Bearer\s+/,'').split('.');if(!p||!s)return false;const expected=crypto.createHmac('sha256',secret).update(p).digest('base64url');return s===expected&&JSON.parse(Buffer.from(p,'base64url').toString()).exp>Date.now()}catch{return false}}
 function send(res,code,data){res.writeHead(code,{'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'Authorization,Content-Type','Access-Control-Allow-Methods':'GET,POST,OPTIONS'});res.end(JSON.stringify(data))}
 async function read(req){let s='';for await(const c of req){s+=c;if(s.length>32768)throw Error('请求体过大')}return s?JSON.parse(s):{}}
@@ -32,7 +33,7 @@ if(p==='/auth/alipay/login'&&req.method==='POST'){
 }
 if(p==='/auth/wechat/login')return send(res,501,{message:'微信真实授权服务端尚未接入'})
 if(!authorized(req))return send(res,401,{message:'请先登录'})
-if(p==='/auth/me')return send(res,200,{id:'demo-001',nickname:'演示用户',demo:true})
+if(p==='/auth/me')return send(res,200,{id:subject(req),platform:subject(req)?.startsWith('alipay:')?'alipay':'demo'})
 if(p==='/orders'&&req.method==='GET')return send(res,200,{items:orders.filter(x=>x.userId==='demo-001'||x.userId===JSON.parse(Buffer.from((req.headers.authorization||'').replace(/^Bearer\\s+/,'').split('.')[0],'base64url').toString()).sub)})
 if(p==='/rentals'&&req.method==='POST'){const data=await read(req);if(!data.vehicleCode)return send(res,400,{message:'请输入车辆编号'});const record={id:crypto.randomUUID(),number:'D'+Date.now(),vehicleCode:data.vehicleCode,status:'demo_created',type:'rental'};record.userId=JSON.parse(Buffer.from((req.headers.authorization||'').replace(/^Bearer\\s+/,'').split('.')[0],'base64url').toString()).sub;orders.push(record);return send(res,201,record)}
 if(p==='/reservations'&&req.method==='POST'){const data=await read(req);if(!data.date)return send(res,400,{message:'请选择日期'});const record={id:crypto.randomUUID(),date:data.date,vehicleCode:data.vehicleCode||'',status:'reserved',type:'reservation'};reservations.push(record);orders.push(record);return send(res,201,record)}

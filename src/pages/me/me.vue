@@ -1,5 +1,6 @@
 <script setup>
-import { ref,onShow } from 'vue'
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { t } from '@/locale'
 definePage({style:{navigationBarTitleText:'我的'}})
 const user=ref(null)

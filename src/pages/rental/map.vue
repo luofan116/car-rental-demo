@@ -6,6 +6,8 @@ definePage({ style: { navigationStyle: 'custom' } })
 const latitude=ref(22.5431),longitude=ref(114.0579),markers=ref([])
 const mode=ref('rent')
 const message=ref('')
+// Vite 环境变量须在 script 中读取，模板只引用普通变量。
+const hasMapKey = Boolean(import.meta.env.VITE_MAP_KEY)
 async function load(){
   if(!import.meta.env.VITE_RENTAL_API_BASE){message.value='演示模式：尚未配置门店后端';return}
   try{
@@ -27,7 +29,7 @@ onMounted(()=>{load();locate()})
   </view>
   <view class="tools"><view @click="locate">◎ 定位</view><view @click="uni.navigateTo({url:'/pages/rental/shops'})">▣ 门店</view></view>
   <!-- #ifdef H5 -->
-  <view v-if="!import.meta.env.VITE_MAP_KEY" class="notice">H5 地图未配置 Map Key，请在项目环境变量和地图服务控制台完成配置。</view>
+  <view v-if="!hasMapKey" class="notice">H5 地图未配置 Map Key，请在项目环境变量和地图服务控制台完成配置。</view>
   <!-- #endif -->
   <view v-if="message" class="hint">{{message}}</view>
   <view class="rent-button" @click="uni.switchTab({url:'/pages/rental/rent'})">{{t('rental.start')}}</view>

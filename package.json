@@ -113,7 +113,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "demo:server": "node server/index.js"
   },
   "dependencies": {
     "@alova/adapter-uniapp": "^2.0.14",

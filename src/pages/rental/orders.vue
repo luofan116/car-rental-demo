@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { t } from '@/locale'
 import { api,requireLogin } from '@/services/rental'
-definePage({style:{navigationBarTitleText:'我的订单'}})
+definePage({style:{navigationStyle:'default',navigationBarTitleText:'我的订单'}})
 const orders=ref([])
 onShow(async()=>{if(!requireLogin())return;try{const r=await api('/orders');orders.value=Array.isArray(r)?r:r.items||[]}catch(e){console.warn(e.message)}})
 </script>

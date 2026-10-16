@@ -2,9 +2,14 @@ import type { UserRole } from '@/api/types/login'
 import type { CustomTabBarItem, CustomTabBarItemBadge } from './types'
 import { computed, reactive, ref } from 'vue'
 import { useUserStore } from '@/store/user'
-import { HOME_PAGE } from '@/utils'
 
 import { tabbarList as _tabbarList, selectedTabbarStrategy, TABBAR_STRATEGY_MAP } from './config'
+
+// 使用 TabBar 配置推导首页路径，避免与 utils/index.ts 形成循环依赖。
+const HOME_PAGE = (() => {
+  const path = _tabbarList.find(item => item.pagePath === 'pages/index/index')?.pagePath || _tabbarList[0]?.pagePath || 'pages/index/index'
+  return path.startsWith('/') ? path : `/${path}`
+})()
 
 /**
  * 当前 tabbar 页面的缓存 key。

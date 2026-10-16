@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { t } from '@/locale'
 import { api,requireLogin } from '@/services/rental'
-definePage({style:{navigationBarTitleText:'预约租车'}})
+definePage({style:{navigationStyle:'default',navigationBarTitleText:'预约租车'}})
 const date=ref('2026-10-17'),code=ref('')
 async function save(){if(!requireLogin())return;try{await api('/reservations','POST',{vehicleCode:code.value,date:date.value});uni.showToast({title:t('rental.success')})}catch(e){uni.showModal({title:t('rental.failed'),content:e.message,showCancel:false})}}
 </script>

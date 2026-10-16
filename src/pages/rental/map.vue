@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { api } from '@/services/rental'
 import { t } from '@/locale'
+import { useMiniNav } from '@/composables/miniNav'
 definePage({ style: { navigationStyle: 'custom' } })
 const latitude=ref(22.5431),longitude=ref(114.0579),markers=ref([])
 const mode=ref('rent')
+const { navBottom } = useMiniNav()
 const message=ref('')
 // Vite 环境变量须在 script 中读取，模板只引用普通变量。
 const hasMapKey = Boolean(import.meta.env.VITE_MAP_KEY)
@@ -33,7 +35,7 @@ onMounted(()=>{load();locate()})
 <template>
 <view class="map-page">
   <map class="map-view" :latitude="latitude" :longitude="longitude" :markers="markers" :show-location="true" />
-  <view class="top">
+  <view class="top" :style="{top: navBottom + 'px'}">
     <view class="home" @click="uni.switchTab({url:'/pages/index/index'})">⌂</view>
     <view class="modes"><text :class="{active:mode==='rent'}" @click="change('rent')">{{t('rental.rent')}}</text><text :class="{active:mode==='swap'}" @click="change('swap')">{{t('rental.swap')}}</text></view>
   </view>

@@ -1,14 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t } from '@/locale'
-import { api, requireLogin } from '@/services/rental'
+import { api } from '@/services/rental'
 definePage({type:'home',style:{navigationStyle:'custom'}})
 const mode=ref('rent'), latitude=ref(22.5431),longitude=ref(114.0579),shops=ref([])
 const markers=ref([])
-function go(path){uni.navigateTo({url:'/pages/rental/'+path})}
+function go(path){const url='/pages/rental/'+path;if(['map','rent','mall'].includes(path))uni.switchTab({url});else uni.navigateTo({url})}
 function switchMode(v){mode.value=v}
 function locate(){uni.getLocation({type:'gcj02',success:r=>{latitude.value=r.latitude;longitude.value=r.longitude},fail:()=>uni.showToast({title:t('rental.locationFail'),icon:'none'})})}
 async function load(){
+  if (!import.meta.env.VITE_RENTAL_API_BASE) { shops.value=[]; markers.value=[]; return }
   try {const res=await api('/shops?mode='+mode.value); shops.value=Array.isArray(res)?res:res.items||[];markers.value=shops.value.filter(x=>x.latitude&&x.longitude).map(x=>({id:Number(x.id)||1,latitude:Number(x.latitude),longitude:Number(x.longitude),title:x.name,width:30,height:30}))}catch(e){console.warn(e.message)}
 }
 onMounted(()=>{locate();load()})

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { t } from '@/locale'
 import { platformLogin } from '@/services/rental'
-definePage({style:{navigationBarTitleText:'授权登录'}})
+definePage({style:{navigationStyle:'default',navigationBarTitleText:'授权登录'}})
 const agreed=ref(false),loading=ref(false)
 async function login(){
  if(!agreed.value)return uni.showToast({title:t('rental.agreementNeeded'),icon:'none'})

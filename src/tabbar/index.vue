@@ -16,10 +16,7 @@ defineOptions({
  * 中间的鼓包tabbarItem的点击事件
  */
 function handleClickBulge() {
-  uni.showToast({
-    title: '点击了中间的鼓包tabbarItem',
-    icon: 'none',
-  })
+  uni.switchTab({ url: '/pages/rental/rent' })
 }
 
 function handleClick(index: number) {

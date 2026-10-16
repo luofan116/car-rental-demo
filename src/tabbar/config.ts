@@ -40,77 +40,11 @@ export const nativeTabbarList: NativeTabBarItem[] = [
 // TODO: 3/3. 使用 CUSTOM_TABBAR 时，更新下面的 tabbar 配置
 // 如果需要配置鼓包，需要在 'tabbar/store.ts' 里面设置，最后在 `tabbar/index.vue` 里面更改鼓包的图片
 export const customTabbarList: CustomTabBarItem[] = [
-  {
-    text: '%tabbar.home%',
-    pagePath: 'pages/index/index',
-    // 注意 unocss 图标需要如下处理：（二选一）
-    // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
-    // 2）配置到 unocss.config.ts 的 safelist 中
-    iconType: 'unocss',
-    icon: 'i-carbon-home',
-    // badge: 'dot',
-  },
-  // 鼓包配置示例（2025-12-31）
-  // 中间鼓包tabbarItem配置：通常是扫描按钮、发布按钮、更多按钮等，点击触发业务逻辑
-  // {
-  //   pagePath: 'pages/me/me',
-  //   text: '我的',
-  //   // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
-  //   // 2）配置到 unocss.config.ts 的 safelist 中
-  //   iconType: 'image',
-  //   icon: '/static/tabbar/scan.png',
-  //   isBulge: true,
-  // },
-  {
-    pagePath: 'pages/i18n/index',
-    text: '%tabbar.i18n%',
-    iconType: 'unocss',
-    icon: 'i-carbon-ibm-watson-language-translator',
-    // badge: 10,
-  },
-  {
-    pagePath: 'pages/about/about',
-    text: '%tabbar.about%',
-    // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
-    // 2）配置到 unocss.config.ts 的 safelist 中
-    iconType: 'unocss',
-    icon: 'i-carbon-menu',
-    // badge: 10,
-    roles: ['admin'],
-  },
-  {
-    pagePath: 'pages/me/me',
-    text: '%tabbar.me%',
-    iconType: 'unocss',
-    icon: 'i-carbon-user',
-    // badge: 10,
-  },
-
-  // 其他类型演示
-  // 1、uiLib
-  // {
-  //   pagePath: 'pages/index/index',
-  //   text: '首页',
-  //   iconType: 'uiLib',
-  //   icon: 'home',
-  // },
-  // 2、iconfont
-  // {
-  //   pagePath: 'pages/index/index',
-  //   text: '首页',
-  //   // 注意 iconfont 图标需要额外加上 'iconfont'，如下
-  //   iconType: 'iconfont',
-  //   icon: 'iconfont icon-my',
-  // },
-  // 3、image
-  // {
-  //   pagePath: 'pages/index/index',
-  //   text: '首页',
-  //   // 使用 ‘image’时，需要配置 icon + iconActive 2张图片
-  //   iconType: 'image',
-  //   icon: '/static/tabbar/home.png',
-  //   iconActive: '/static/tabbar/homeHL.png',
-  // },
+  { text: '%tabbar.home%', pagePath: 'pages/index/index', iconType: 'unocss', icon: 'i-carbon-home' },
+  { text: '%tabbar.map%', pagePath: 'pages/rental/map', iconType: 'unocss', icon: 'i-carbon-map' },
+  { text: '%tabbar.rent%', pagePath: 'pages/rental/rent', iconType: 'unocss', icon: 'i-carbon-bicycle', isBulge: true },
+  { text: '%tabbar.mall%', pagePath: 'pages/rental/mall', iconType: 'unocss', icon: 'i-carbon-shopping-cart' },
+  { text: '%tabbar.me%', pagePath: 'pages/me/me', iconType: 'unocss', icon: 'i-carbon-user' },
 ]
 
 /**

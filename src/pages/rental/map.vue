@@ -18,6 +18,16 @@ async function load(){
 }
 function locate(){uni.getLocation({type:'gcj02',success:r=>{latitude.value=r.latitude;longitude.value=r.longitude},fail:()=>uni.showToast({title:t('rental.locationFail'),icon:'none'})})}
 function change(v){mode.value=v;load()}
+function openRentalActions(){
+  uni.showActionSheet({
+    itemList:['扫码租车','输入编号租车','预约租车'],
+    success({tapIndex}){
+      if(tapIndex===0)uni.scanCode({onlyFromCamera:true,success:r=>uni.navigateTo({url:'/pages/rental/rent?code='+encodeURIComponent(r.result||'')})})
+      else if(tapIndex===1)uni.navigateTo({url:'/pages/rental/rent'})
+      else if(tapIndex===2)uni.navigateTo({url:'/pages/rental/reserve'})
+    },
+  })
+}
 onMounted(()=>{load();locate()})
 </script>
 <template>
@@ -32,7 +42,7 @@ onMounted(()=>{load();locate()})
   <view v-if="!hasMapKey" class="notice">H5 地图未配置 Map Key，请在项目环境变量和地图服务控制台完成配置。</view>
   <!-- #endif -->
   <view v-if="message" class="hint">{{message}}</view>
-  <view class="rent-button" @click="uni.switchTab({url:'/pages/rental/rent'})">{{t('rental.start')}}</view>
+  <view class="rent-button" @click="openRentalActions">{{t('rental.start')}}</view>
 </view>
 </template>
 <style scoped>

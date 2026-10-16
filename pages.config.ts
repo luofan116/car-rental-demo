@@ -3,8 +3,8 @@ import { tabBar } from './src/tabbar/config'
 
 export default defineUniPages({
   globalStyle: {
-    navigationStyle: 'default',
-    navigationBarTitleText: 'unibest',
+    navigationStyle: 'custom',
+    navigationBarTitleText: '优骑租车',
     navigationBarBackgroundColor: '#f8f8f8',
     navigationBarTextStyle: 'black',
     backgroundColor: '#FFFFFF',

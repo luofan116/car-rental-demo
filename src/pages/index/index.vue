@@ -2,17 +2,30 @@
 import { ref, onMounted } from 'vue'
 import { t } from '@/locale'
 import { api } from '@/services/rental'
+import { getDemoShops, mapShopMarkers } from '@/mock/shops'
 import { useMiniNav } from '@/composables/miniNav'
 definePage({type:'home',style:{navigationStyle:'custom'}})
 const mode=ref('rent'), latitude=ref(22.5431),longitude=ref(114.0579),shops=ref([])
 const markers=ref([])
 const { navBottom } = useMiniNav()
 function go(path){const url='/pages/rental/'+path;if(['map','rent','mall'].includes(path))uni.switchTab({url});else uni.navigateTo({url})}
-function switchMode(v){mode.value=v}
+function switchMode(v){mode.value=v;load()}
 function locate(){uni.getLocation({type:'gcj02',success:r=>{latitude.value=r.latitude;longitude.value=r.longitude},fail:()=>uni.showToast({title:t('rental.locationFail'),icon:'none'})})}
 async function load(){
-  if (!import.meta.env.VITE_RENTAL_API_BASE) { shops.value=[]; markers.value=[]; return }
-  try {const res=await api('/shops?mode='+mode.value); shops.value=Array.isArray(res)?res:res.items||[];markers.value=shops.value.filter(x=>x.latitude&&x.longitude).map(x=>({id:Number(x.id)||1,latitude:Number(x.latitude),longitude:Number(x.longitude),title:x.name,width:30,height:30}))}catch(e){console.warn(e.message)}
+  const fallback=()=>{shops.value=getDemoShops(mode.value);markers.value=mapShopMarkers(shops.value)}
+  if (!import.meta.env.VITE_RENTAL_API_BASE) {fallback();return}
+  try {
+    const result=await api('/shops?mode='+mode.value)
+    shops.value=Array.isArray(result)?result:(result.items||[])
+    markers.value=mapShopMarkers(shops.value.filter(s=>s.latitude&&s.longitude))
+  } catch(error) {
+    console.warn('门店接口失败，显示演示数据:',error.message)
+    fallback()
+  }
+}
+function onMarkerTap(event){
+ const shop=shops.value.find(s=>Number(s.id)===Number(event.detail.markerId))
+ if(shop)uni.showModal({title:shop.name,content:shop.address+'\\n'+(shop.type==='rent'?'可租车辆：'+(shop.vehicles??0):'可用电池：'+(shop.batteries??0)),showCancel:false})
 }
 onMounted(()=>{locate();load()})
 </script>
@@ -20,7 +33,7 @@ onMounted(()=>{locate();load()})
  <view class="rental">
   <view class="head" :style="{paddingTop: navBottom + 'px'}"><view class="brand">优骑 <text class="sub">BIKE RENTAL</text></view><view class="lang" @click="go('settings')">⚙</view></view>
   <view class="switch" :style="{top: `calc(${navBottom}px + 88rpx)`}"><view :class="mode==='rent'?'active':''" @click="switchMode('rent');load()">{{ t('rental.rent') }}</view><view :class="mode==='swap'?'active':''" @click="switchMode('swap');load()">{{ t('rental.swap') }}</view></view>
-  <map class="map" :latitude="latitude" :longitude="longitude" :markers="markers" :show-location="true" />
+  <map class="map" :latitude="latitude" :longitude="longitude" :markers="markers" :show-location="true" @markertap="onMarkerTap" />
   <view class="locate" @click="locate">◎</view>
   <view class="panel">
    <view class="line"><text class="section">{{ t('rental.nearby') }}</text><text class="muted">{{ shops.length }} {{ t('rental.stores') }}</text></view>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { t } from '@/locale'
-definePage({style:{navigationBarTitleText:'设置'}})
+definePage({style:{navigationStyle:'default',navigationBarTitleText:'设置'}})
 const items=['privacy','terms','disclaimer']
 const langs=['zh-Hans','en'];const locale=ref(uni.getLocale())
 function changeLang(e){const value=langs[e.detail.value];locale.value=value;uni.setLocale(value);uni.showToast({title:'OK'})}

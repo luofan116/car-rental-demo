@@ -16,6 +16,7 @@ const {
   VITE_APP_TITLE,
   VITE_UNI_APPID,
   VITE_WX_APPID,
+  VITE_ALIPAY_APPID,
   VITE_APP_PUBLIC_BASE,
   VITE_APP_ROUTER_MODE,
   VITE_FALLBACK_LOCALE,
@@ -33,7 +34,10 @@ export default defineManifestConfig({
   'locale': VITE_FALLBACK_LOCALE, // 'zh-Hans'
   'h5': {
     sdkConfigs: {
-      maps: { tencent: { key: VITE_MAP_KEY || '' } },
+      maps: {
+        tencent: { key: VITE_MAP_KEY || '' },
+        qqmap: { key: VITE_MAP_KEY || '' },
+      },
     },
     router: {
       mode: VITE_APP_ROUTER_MODE as 'history' | 'hash',
@@ -142,6 +146,7 @@ export default defineManifestConfig({
     // __usePrivacyCheck__: true,
   },
   'mp-alipay': {
+    appid: VITE_ALIPAY_APPID,
     usingComponents: true,
     styleIsolation: 'shared',
     optimization: {

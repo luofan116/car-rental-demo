@@ -2,7 +2,7 @@
 import {ref,onMounted} from 'vue'
 import {api} from '@/services/rental'
 import {t} from '@/locale'
-definePage({style:{navigationBarTitleText:'附近门店'}})
+definePage({style:{navigationStyle:'default',navigationBarTitleText:'附近门店'}})
 const shops=ref([])
 onMounted(async()=>{if(!import.meta.env.VITE_RENTAL_API_BASE)return;try{const r=await api('/shops');shops.value=Array.isArray(r)?r:r.items||[]}catch(e){console.warn(e.message)}})
 </script>

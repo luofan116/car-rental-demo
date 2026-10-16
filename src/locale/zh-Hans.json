@@ -46,5 +46,8 @@
   "rental.policyPending": "请接入经法务确认的正式文本",
   "rental.loggedOut": "已退出登录",
   "rental.deleteAccountHint": "账号注销需接入服务端注销接口",
-  "rental.locationFail": "定位失败，请检查权限"
+  "rental.locationFail": "定位失败，请检查权限",
+  "tabbar.map": "地图",
+  "tabbar.rent": "立即租赁",
+  "tabbar.mall": "商城"
 }

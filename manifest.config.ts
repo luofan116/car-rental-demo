@@ -19,6 +19,7 @@ const {
   VITE_APP_PUBLIC_BASE,
   VITE_APP_ROUTER_MODE,
   VITE_FALLBACK_LOCALE,
+  VITE_MAP_KEY,
 } = env
 // console.log('manifest.config.ts env:', env)
 
@@ -31,6 +32,9 @@ export default defineManifestConfig({
   'transformPx': false,
   'locale': VITE_FALLBACK_LOCALE, // 'zh-Hans'
   'h5': {
+    sdkConfigs: {
+      maps: { tencent: { key: VITE_MAP_KEY || '' } },
+    },
     router: {
       mode: VITE_APP_ROUTER_MODE as 'history' | 'hash',
       base: VITE_APP_PUBLIC_BASE,

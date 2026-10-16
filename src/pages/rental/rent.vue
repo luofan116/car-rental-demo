@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { t } from '@/locale'
 import { api, scanRental, requireLogin } from '@/services/rental'
 definePage({style:{navigationBarTitleText:'立即租赁'}})
 const vehicle=ref(''),busy=ref(false)
+onLoad(options => { if(options?.code)vehicle.value=decodeURIComponent(options.code) })
 async function scan(){try{const r=await scanRental();vehicle.value=r.result||''}catch(e){uni.showToast({title:e.message||'扫码取消',icon:'none'})}}
 async function submit(){if(!requireLogin())return;if(!vehicle.value.trim())return uni.showToast({title:t('rental.enterVehicle'),icon:'none'});busy.value=true;try{await api('/rentals','POST',{vehicleCode:vehicle.value});uni.showToast({title:t('rental.success')})}catch(e){uni.showModal({title:t('rental.failed'),content:e.message,showCancel:false})}finally{busy.value=false}}
 </script>
